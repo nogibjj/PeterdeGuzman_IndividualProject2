@@ -191,11 +191,14 @@ mod tests_countyname {
     #[test]
     fn test_get_county_name_invalid() {
         //Testing for file names that are invalid
-        let file_name = "ncvotingdata32.txt";
+        let file_name = "ncvotingdata0.txt";
         //Call function
         let result = get_county_name(file_name);
         //Assert that Result is the expected error
-        assert_eq!(result, Err("Invalid file name format".to_string()));
+        assert_eq!(
+            result,
+            Err("County not found for the given number".to_string())
+        );
     }
 }
 
