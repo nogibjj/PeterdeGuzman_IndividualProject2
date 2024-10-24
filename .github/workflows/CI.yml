@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      WORKING_DIR: votesqlite #change this to the rust project name you are developing.
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+
+    - name: Check
+      run: cargo check
+      working-directory: ${{ env.WORKING_DIR }}
+
+    - name: Format
+      run: cargo fmt
+      working-directory: ${{ env.WORKING_DIR }}
+
+    - name: Test
+      run: cargo test
+      working-directory: ${{ env.WORKING_DIR }}
+
+    - name: Release
+      run: cargo build --release
+      working-directory: ${{ env.WORKING_DIR }}
+
+    - name: Upload Binary Artifact
+      uses: actions/upload-artifact@v4 #v3 is scheduled for deprecation Nov 30 2024 check marketplace
+      with:
+        name: CLI Binary
+        path: ${{ env.WORKING_DIR }}/target/release/votesqlite #change the /add to the name of your binary
