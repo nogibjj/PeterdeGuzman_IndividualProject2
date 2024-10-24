@@ -87,27 +87,55 @@ pub fn extract_zip(url: &str, directory: &str) -> Result<(), Box<dyn Error>> {
 //     }
 // }
 
+// pub fn get_county_name(file_name: &str) -> Result<&'static str, String> {
+//     // Define the county map inside the function
+//     let county_map: HashMap<u32, &'static str> =
+//         [(32, "Durham"), (92, "Wake")].iter().cloned().collect();
+
+//     // Extract the number from the file name (assuming the format is "vote<number>.txt")
+//     let number_part = file_name
+//         .strip_prefix("ncvoter")
+//         .ok_or("Invalid file name format")?
+//         .strip_suffix(".txt")
+//         .ok_or("Invalid file name format")?;
+
+//     // Parse the number
+//     match number_part.parse::<u32>() {
+//         Ok(number) => county_map
+//             .get(&number)
+//             .copied()
+//             .ok_or("County not found".to_string()), // Return an error if county is not found
+//         Err(_) => Err("Failed to parse the number".to_string()),
+//     }
+//     print()
+// }
+
+
 pub fn get_county_name(file_name: &str) -> Result<&'static str, String> {
     // Define the county map inside the function
     let county_map: HashMap<u32, &'static str> =
         [(32, "Durham"), (92, "Wake")].iter().cloned().collect();
 
     // Extract the number from the file name (assuming the format is "vote<number>.txt")
-    let number_part = file_name
-        .strip_prefix("vote")
-        .ok_or("Invalid file name format")?
-        .strip_suffix(".txt")
-        .ok_or("Invalid file name format")?;
+    let number_part = file_name.strip_prefix("ncvoter").ok_or_else(|| "Invalid file name format".to_string())?
+        .strip_suffix(".txt").ok_or_else(|| "Invalid file name format".to_string())?;
 
     // Parse the number
     match number_part.parse::<u32>() {
-        Ok(number) => county_map
-            .get(&number)
-            .copied()
-            .ok_or("County not found".to_string()), // Return an error if county is not found
-        Err(_) => Err("Failed to parse the number".to_string()),
+        Ok(number) => {
+            if let Some(county_name) = county_map.get(&number).copied() {
+                println!("Matched county: {}", county_name); // Print the matched county name
+                return Ok(county_name); // Return the matched county name
+            } else {
+                return Err("County not found for the given number".to_string()); // Return error if county not found
+            }
+        },
+        Err(_) => {
+            return Err("Failed to parse the number".to_string()); // Return parsing error
+        },
     }
 }
+
 
 pub fn print_county_names_in_directory(path: &str) -> io::Result<()> {
     let entries = fs::read_dir(path)?;
