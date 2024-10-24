@@ -7,6 +7,8 @@ If you review the Summary of past jobs in the GitHub "Actions" panel, you can vi
 ## Binary Download (Artifact Link)
 https://github.com/nogibjj/PeterdeGuzman_RustCLITool/actions/runs/11490925099/artifacts/2096674209
 
+-   This tool can be used by downloading the binary file from the above link. Alternatively, users can fork this repo and use `cargo build --release` and `cargo run` to run this CLI tool locally. 
+
 ### Project Motivation & Purpose
 This project uses Rust to create a binary file Command-Line Tool. This repository builds upon my previous work analyzing North Carolina individual-level voter registration and vote history data. If interested, please check out this repository https://github.com/nogibjj/PeterdeGuzman_Mini6 to view a previous project where I created an ETL-Query (Extract, Transform, Load, Query) pipeline using Python and Databricks to join and query individual-level voter registration and vote history data for North Carolina.
 
