@@ -17,7 +17,7 @@ This tool allows users to download data from links to zipped files into their ch
 ### CLI Tool Documentation
 ![alt text](helpstatement.png)
 
-### Proof of Successful Command-Line Operations
+### Proof of Successful Command-Line Operations (Video)
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/w1ZQ8IafFdE/0.jpg)](https://www.youtube.com/watch?v=w1ZQ8IafFdE/)
 
 
