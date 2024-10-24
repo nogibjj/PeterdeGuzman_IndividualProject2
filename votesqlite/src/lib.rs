@@ -8,6 +8,7 @@ use std::fs::File;
 use std::io;
 use std::io::Write;
 //use std::io::{BufReader, Cursor, Read};
+use regex::Regex;
 use std::collections::HashMap;
 use std::error::Error;
 use std::path::Path;
@@ -149,12 +150,12 @@ pub fn get_county_name(file_name: &str) -> Result<&'static str, String> {
     let county_map: HashMap<u32, &'static str> =
         [(32, "Durham"), (92, "Wake")].iter().cloned().collect();
 
-    // Extract the number from the file name (assuming the format is "vote<number>.txt")
-    let number_part = file_name
-        .strip_prefix("ncvoter")
-        .ok_or_else(|| "Invalid file name format".to_string())?
-        .strip_suffix(".txt")
-        .ok_or_else(|| "Invalid file name format".to_string())?;
+    let re = Regex::new(r"(\d+)").map_err(|_| "Failed to create regex".to_string())?;
+    let number_part = re
+        .captures(file_name)
+        .and_then(|caps| caps.get(1))
+        .ok_or_else(|| "No number found in file name".to_string())?
+        .as_str();
 
     // Parse the number
     match number_part.parse::<u32>() {
