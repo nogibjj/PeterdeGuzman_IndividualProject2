@@ -2,7 +2,7 @@
 
 ## Status Badge
 [![CI](https://github.com/nogibjj/PeterdeGuzman_RustCLITool/actions/workflows/CI.yml/badge.svg)](https://github.com/nogibjj/PeterdeGuzman_RustCLITool/actions/workflows/CI.yml)
-If you review the Summary of past jobs in the GitHub "Actions" panel, you can view that this repository is able to successfully format, lint, and build the included Rust logic. 
+If you review the Summary of past jobs in the GitHub "Actions" panel, you can view that this repository is able to successfully format, lint, build, and test the included Rust logic. 
 
 ## Binary Download (Artifact Link)
 https://github.com/nogibjj/PeterdeGuzman_RustCLITool/actions/runs/11490925099/artifacts/2096674209
