@@ -1,6 +1,8 @@
+use crate::transform::transform_voterreg;
 use clap::{Parser, Subcommand};
 use std::result::Result;
 use votesqlite::{extract_zip, get_county_name, print_county_names_in_directory};
+mod transform;
 
 /// A simple CLI tool to download and extract ZIP files
 #[derive(Parser, Debug)]
@@ -23,6 +25,13 @@ enum Commands {
     //Print the county name of all files in a directory
     #[command(alias = "print_county_names", long_flag = "print_county_names")]
     PrintCountyNames { path: String },
+    #[command(alias = "transform_voterreg", long_flag = "transform_voterreg")]
+    TransformVoterReg {
+        txtfile: String,
+        county: String,
+        date: String,
+        directory: String,
+    },
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -44,6 +53,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
         Commands::PrintCountyNames { path } => {
             print_county_names_in_directory(&path).expect("Did not identify any county names.")
+        }
+        Commands::TransformVoterReg {
+            txtfile,
+            county,
+            date,
+            directory,
+        } => {
+            println!("Transforming file {} into UTF-16.", txtfile);
+            transform_voterreg(&txtfile, &county, &date, &directory)
+                .expect("Did not successfully transform dataset.")
         }
     }
     Ok(())
