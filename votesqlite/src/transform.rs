@@ -1,10 +1,3 @@
-// use std::error::Error;
-// use std::fs::File;
-// use std::io::{self, BufReader};
-// use csv::ReaderBuilder;
-// use sqlx::sqlite::SqlitePoolOptions;
-// use sql::{Connection, Executor};
-
 use csv::ReaderBuilder;
 use csv::WriterBuilder;
 use encoding::all::WINDOWS_1252;
@@ -14,10 +7,11 @@ use std::fs::File;
 use std::io::BufWriter;
 use std::path::Path;
 
-//Future expansion:
-//Transform Windows-1521 encoded files to UTF-16
-//Load voter registration dataset
+//Transform and Load Functions
 
+//Future expansion:
+
+//Transform Windows-1521 encoded files to UTF-16
 pub fn transform_voterreg(
     txtfile: &str,
     county: &str,
@@ -128,17 +122,20 @@ pub fn transform_voterreg(
     // Read and convert records, then write to the output file
     for result in reader.records() {
         let record = result?;
-        // Convert each field from Windows-1252 to UTF-16 and write to the new file
+
+        // Convert each field from Windows-1252 to UTF-8 and write to the new file
         let utf16_record: Vec<String> = record
             .iter()
             .map(|field| {
+                // Encode to bytes using Windows-1252
                 let bytes = WINDOWS_1252.encode(field, EncoderTrap::Strict).unwrap();
-                let decoded_str = String::from_utf8(bytes).unwrap(); // Decode bytes to String
-                let _utf16: Vec<u16> = decoded_str.encode_utf16().collect(); // Convert String to UTF-16
 
-                // Convert the u16 vector back to String if necessary or return the UTF-16 representation
-                // Here we're returning the decoded string directly since you are writing to CSV.
-                decoded_str
+                // Decode bytes to String with error handling
+                String::from_utf8(bytes).unwrap_or_else(|err| {
+                    eprintln!("Error decoding field: {:?}", err);
+                    // Return a placeholder for invalid UTF-8 bytes
+                    String::from("INVALID_UTF8")
+                })
             })
             .collect();
 
@@ -151,30 +148,4 @@ pub fn transform_voterreg(
     Ok(())
 }
 
-// // Creates Transform and Load functions
-
-// #[derive(Debug)]
-// struct PollingPlace {
-//     election_dt: String,
-//     county_name: String,
-//     polling_place_id: i32,
-//     polling_place_name: String,
-//     precinct_name: String,
-//     house_num: Option<i32>,
-//     street_name: String,
-//     city: String,
-//     state: String,
-//     zip: String,
-// }
-
-// //Load Polling Places data
-// pub fn load_pollingplaces(dataset: &str, year: &str) -> Result<String, Box<dyn Error>> {
-//     //Read CSV
-//     let file = File::open(dataset)?;
-
-//     //Connect to SQLite db
-
-//     //Create table
-
-//     //Insert values into db
-// }
+//Load voter registration dataset
