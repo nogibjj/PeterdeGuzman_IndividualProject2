@@ -1,6 +1,7 @@
 use crate::transform::transform_voterreg;
 use clap::{Parser, Subcommand};
 use std::result::Result;
+use transform::remove_invalid_utf8_bytes;
 use votesqlite::{extract_zip, get_county_name, print_county_names_in_directory};
 mod transform;
 
@@ -31,6 +32,11 @@ enum Commands {
         county: String,
         date: String,
         directory: String,
+    },
+    #[command(alias = "remove_invalid_utf8_bytes", long_flag = "remove_invalidutf8")]
+    RemoveInvalidUTF8 {
+        input_file: String,
+        output_file: String,
     },
 }
 
@@ -63,6 +69,17 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             println!("Transforming file {} into UTF-16.", txtfile);
             transform_voterreg(&txtfile, &county, &date, &directory)
                 .expect("Did not successfully transform dataset.")
+        }
+        Commands::RemoveInvalidUTF8 {
+            input_file,
+            output_file,
+        } => {
+            println!(
+                "Removing Invalid UTF-8 bytes from {} and saving to {}.",
+                input_file, output_file
+            );
+            remove_invalid_utf8_bytes(&input_file, &output_file)
+                .expect("Removing Invalid UTF-8 bytes failed.")
         }
     }
     Ok(())
