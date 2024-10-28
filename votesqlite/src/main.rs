@@ -1,9 +1,10 @@
-use crate::transform::transform_voterreg;
-use clap::{Parser, Subcommand};
-use std::result::Result;
-use transform::remove_invalid_utf8_bytes;
+use crate::transform::{create_table, transform_voterreg};
+use clap::{Command, Parser, Subcommand};
+use std::{fs::create_dir, result::Result};
+use transform::{drop_table, load_voterreg, query_exec, remove_invalid_utf8_bytes};
 use votesqlite::{extract_zip, get_county_name, print_county_names_in_directory};
 mod transform;
+use rusqlite::{Connection, Result};
 
 /// A simple CLI tool to download and extract ZIP files
 #[derive(Parser, Debug)]
@@ -33,16 +34,36 @@ enum Commands {
         date: String,
         directory: String,
     },
+    //Remove Invalid UTF-8 Bytes from file
     #[command(alias = "remove_invalid_utf8_bytes", long_flag = "remove_invalidutf8")]
     RemoveInvalidUTF8 {
         input_file: String,
         output_file: String,
     },
+    //Load NCSBE voter registration data
+    #[command(alias = "load_voterreg", long_flag = "load_vr")]
+    LoadVoterReg {
+        table_name: String,
+        file_path: String,
+    },
+    //Create
+    #[command(alias = "c", short_flag = 'c')]
+    Create { table_name: String },
+    //Read or Query
+    #[command(alias = "q", short_flag = 'q')]
+    Query { query: String },
+    //Update
+    //Delete table
+    #[command(alias = "d", short_flag = 'd')]
+    Delete { delete_query: String },
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     //Parse CLI arguments and store them in the args object
     let args = Cli::parse();
+
+    //generate connection
+    let conn = Connection::open("voterreg_durham.db")?;
 
     //Match the behavior on the subcommand and call lib functions
     match args.command {
@@ -80,6 +101,28 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             );
             remove_invalid_utf8_bytes(&input_file, &output_file)
                 .expect("Removing Invalid UTF-8 bytes failed.")
+        }
+        Commands::LoadVoterReg {
+            table_name,
+            file_path,
+        } => {
+            println!(
+                "Loading data into table '{}' from '{}'",
+                table_name, file_path
+            );
+            load_voterreg(&conn, &table_name, &file_path).expect("Failed to load data from csv");
+        }
+        Commands::Create { table_name } => {
+            println!("Creating Table {}", table_name);
+            create_table(&conn, &table_name).expect("Failed to create table");
+        }
+        Commands::Query { query } => {
+            println!("Executing query: {}", query);
+            query_exec(&conn, &query).expect("Failed to execute query");
+        }
+        Commands::Delete { delete_query } => {
+            println!("Deleting {}", delete_query);
+            drop_table(&conn, &delete_query).expect("Failed to drop table");
         }
     }
     Ok(())
