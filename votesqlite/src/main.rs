@@ -1,10 +1,13 @@
-use crate::transform::{create_table, transform_voterreg};
 use clap::{Parser, Subcommand};
 use std::result::Result;
-use transform::{drop_table, load_voterreg, query_exec, remove_invalid_utf8_bytes, update_table};
-use votesqlite::{extract_zip, get_county_name, print_county_names_in_directory};
+use transform::{drop_table, remove_invalid_utf8_bytes, update_table};
+use votesqlite::{extract, extract_zip, get_county_name, print_county_names_in_directory};
 mod transform;
 use rusqlite::Connection;
+mod voterreg;
+use voterreg::{create_tablevr, load_voterreg, query_vr, transform_voterreg};
+mod pollingplace;
+use pollingplace::create_pollingplace;
 
 /// A simple CLI tool to download and extract ZIP files
 #[derive(Parser, Debug)]
@@ -18,6 +21,9 @@ struct Cli {
 #[derive(Debug, Subcommand)]
 // I separate the commands as enum types
 enum Commands {
+    //Extract a file from a link
+    #[command(alias = "extract_notzipped", short_flag = 'e', long_flag = "extract")]
+    Extract { url: String, directory: String },
     //Download a file from a link, unzip, and save to directory
     #[command(alias = "extract_zip", short_flag = 'z', long_flag = "extract_zip")]
     ExtractZipped { url: String, directory: String },
@@ -46,12 +52,15 @@ enum Commands {
         table_name: String,
         file_path: String,
     },
-    //Create
-    #[command(alias = "c", short_flag = 'c')]
-    Create { table_name: String },
+    //Create Table - for Voter Registration data
+    #[command(alias = "create_voterreg", long_flag = "cvr")]
+    CreateVR { table_name: String },
+    //Create Table - for Polling Place data
+    #[command(alias = "create_pollingplace", long_flag = "cpp")]
+    CreatePP { table_name: String },
     //Read or Query
-    #[command(alias = "q", short_flag = 'q')]
-    Query { query: String },
+    #[command(alias = "q", long_flag = "qvr")]
+    QueryVR { query: String },
     //Update
     #[command(alias = "u", short_flag = 'u')]
     Update {
@@ -73,6 +82,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     //Match the behavior on the subcommand and call lib functions
     match args.command {
+        Commands::Extract { url, directory } => {
+            println!("Downloading file from {} and saving to {}", url, directory);
+            extract(&url, &directory).expect("Failed to download and save file.")
+        }
         Commands::ExtractZipped { url, directory } => {
             println!(
                 "Downloading file from {} and unzipping file to {}",
@@ -118,13 +131,17 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             );
             load_voterreg(&conn, &table_name, &file_path).expect("Failed to load data from csv");
         }
-        Commands::Create { table_name } => {
+        Commands::CreateVR { table_name } => {
             println!("Creating Table {}", table_name);
-            create_table(&conn, &table_name).expect("Failed to create table");
+            create_tablevr(&conn, &table_name).expect("Failed to create table");
         }
-        Commands::Query { query } => {
+        Commands::CreatePP { table_name } => {
+            println!("Creating Table {}", table_name);
+            create_pollingplace(&conn, &table_name).expect("Failed to create table");
+        }
+        Commands::QueryVR { query } => {
             println!("Executing query: {}", query);
-            query_exec(&conn, &query).expect("Failed to execute query");
+            query_vr(&conn, &query).expect("Failed to execute query");
         }
         Commands::Update {
             table_name,
