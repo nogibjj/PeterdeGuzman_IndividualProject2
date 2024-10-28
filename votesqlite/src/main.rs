@@ -1,10 +1,10 @@
 use crate::transform::{create_table, transform_voterreg};
-use clap::{Command, Parser, Subcommand};
-use std::{fs::create_dir, result::Result};
-use transform::{drop_table, load_voterreg, query_exec, remove_invalid_utf8_bytes};
+use clap::{Parser, Subcommand};
+use std::result::Result;
+use transform::{drop_table, load_voterreg, query_exec, remove_invalid_utf8_bytes, update_table};
 use votesqlite::{extract_zip, get_county_name, print_county_names_in_directory};
 mod transform;
-use rusqlite::{Connection, Result};
+use rusqlite::Connection;
 
 /// A simple CLI tool to download and extract ZIP files
 #[derive(Parser, Debug)]
@@ -53,6 +53,12 @@ enum Commands {
     #[command(alias = "q", short_flag = 'q')]
     Query { query: String },
     //Update
+    #[command(alias = "u", short_flag = 'u')]
+    Update {
+        table_name: String,
+        set_clause: String,
+        condition: String,
+    },
     //Delete table
     #[command(alias = "d", short_flag = 'd')]
     Delete { delete_query: String },
@@ -119,6 +125,18 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         Commands::Query { query } => {
             println!("Executing query: {}", query);
             query_exec(&conn, &query).expect("Failed to execute query");
+        }
+        Commands::Update {
+            table_name,
+            set_clause,
+            condition,
+        } => {
+            println!(
+                "UPDATE {} SET {} WHERE{};",
+                table_name, set_clause, condition
+            );
+            update_table(&conn, &table_name, &set_clause, &condition)
+                .expect("Failed to execute update query");
         }
         Commands::Delete { delete_query } => {
             println!("Deleting {}", delete_query);
