@@ -7,7 +7,7 @@ use rusqlite::Connection;
 mod voterreg;
 use voterreg::{create_tablevr, load_voterreg, query_vr, transform_voterreg};
 mod pollingplace;
-use pollingplace::create_pollingplace;
+use pollingplace::{create_pollingplace, query_pp};
 
 /// A simple CLI tool to download and extract ZIP files
 #[derive(Parser, Debug)]
@@ -58,9 +58,12 @@ enum Commands {
     //Create Table - for Polling Place data
     #[command(alias = "create_pollingplace", long_flag = "cpp")]
     CreatePP { table_name: String },
-    //Read or Query
-    #[command(alias = "q", long_flag = "qvr")]
+    //Read or Query - for Voter Registration data
+    #[command(alias = "query_voterreg", long_flag = "qvr")]
     QueryVR { query: String },
+    //Read or Query - for Polling Place data
+    #[command(alias = "query_pollingplace", long_flag = "qpp")]
+    QueryPP { query: String },
     //Update
     #[command(alias = "u", short_flag = 'u')]
     Update {
@@ -142,6 +145,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         Commands::QueryVR { query } => {
             println!("Executing query: {}", query);
             query_vr(&conn, &query).expect("Failed to execute query");
+        }
+        Commands::QueryPP { query } => {
+            println!("Executing query: {}", query);
+            query_pp(&conn, &query).expect("Failed to execute query");
         }
         Commands::Update {
             table_name,
