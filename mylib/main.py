@@ -1,5 +1,7 @@
 from lib import load_pollingplaces
 
+# Logic to run all ETL-Query functions with SQLite for polling place data
+
 
 if __name__ == "__main__":
 
