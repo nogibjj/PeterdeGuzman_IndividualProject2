@@ -15,6 +15,7 @@ This project satisfies the requirements for Mini Project 8. I rewrote my existin
 Python Query:
 
 Rust Query:
+![alt text](query_Rust.png)
 
 ## Individual Project 2 - Explanation
 This project also satisfies the requirements for Individual Project 2. 
@@ -26,7 +27,7 @@ As a new user of Rust, when I started this project I used ChatGPT-4 to review my
 The Rust and Python scripts are both set up to load data into a "pollingplace2020.db" SQLite database and execute CRUD (Create, Read, Update, Delete) operations and a generalized query function. 
 
 ### Project Motivation & Purpose
-This project uses Rust to create a binary file Command-Line Tool to intake North Carolina polling place data and load it into a Sqlite database through an ETL-Query (Extract, Transform, Load, Query) pipeline. This repository builds upon my previous work analyzing North Carolina individual-level voter registration and vote history data. If interested, please check out this repository https://github.com/nogibjj/PeterdeGuzman_Mini6 to view a previous project where I created an ETL pipeline using Python and Databricks to join and query individual-level voter registration and vote history data for North Carolina.
+This project uses Rust and Python to create a binary file Command-Line Tool to intake North Carolina polling place data and load it into a Sqlite database through an ETL-Query (Extract, Transform, Load, Query) pipeline. This repository builds upon my previous work analyzing North Carolina individual-level voter registration and vote history data. If interested, please check out this repository https://github.com/nogibjj/PeterdeGuzman_Mini6 to view a previous project where I created an ETL pipeline using Python and Databricks to join and query individual-level voter registration and vote history data for North Carolina.
 
 ### Tool Explanation 
 This tool allows users to download data from links to zipped files into their chosen directory (using the `extract_zip()` function). Building off my previous work with North Carolina voter data, this tool also allows users to identify the county name from a file name that includes a two-digit North Carolina county id. Finally, this tool expands the use of this `get_county_name()` function to print the county names for all files in a directory (using the `print_county_names()` function).
