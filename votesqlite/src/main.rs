@@ -7,7 +7,7 @@ use rusqlite::Connection;
 mod voterreg;
 use voterreg::{create_tablevr, load_voterreg, query_vr, transform_voterreg};
 mod pollingplace;
-use pollingplace::{create_pollingplace, query_pp};
+use pollingplace::{create_pollingplace, general_query, load_pollingplace, query_pp};
 
 /// A simple CLI tool to download and extract ZIP files
 #[derive(Parser, Debug)]
@@ -46,9 +46,15 @@ enum Commands {
         input_file: String,
         output_file: String,
     },
-    //Load NCSBE voter registration data
+    //Load - for Voter Registration data
     #[command(alias = "load_voterreg", long_flag = "load_vr")]
-    LoadVoterReg {
+    LoadVR {
+        table_name: String,
+        file_path: String,
+    },
+    //Load - for Polling Place data
+    #[command(alias = "load_polling_place", long_flag = "load_pp")]
+    LoadPP {
         table_name: String,
         file_path: String,
     },
@@ -58,12 +64,15 @@ enum Commands {
     //Create Table - for Polling Place data
     #[command(alias = "create_pollingplace", long_flag = "cpp")]
     CreatePP { table_name: String },
-    //Read or Query - for Voter Registration data
+    //Read - for Voter Registration data
     #[command(alias = "query_voterreg", long_flag = "qvr")]
-    QueryVR { query: String },
-    //Read or Query - for Polling Place data
+    ReadVR { query: String },
+    //Read - for Polling Place data
     #[command(alias = "query_pollingplace", long_flag = "qpp")]
-    QueryPP { query: String },
+    ReadPP { query: String },
+    //Query - general
+    #[command(alias = "query_general", short_flag = 'q')]
+    Query { query: String },
     //Update
     #[command(alias = "u", short_flag = 'u')]
     Update {
@@ -81,7 +90,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = Cli::parse();
 
     //generate connection
-    let conn = Connection::open("voterreg_durham.db")?;
+    let conn = Connection::open("pollingplace2020.db")?;
 
     //Match the behavior on the subcommand and call lib functions
     match args.command {
@@ -124,7 +133,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             remove_invalid_utf8_bytes(&input_file, &output_file)
                 .expect("Removing Invalid UTF-8 bytes failed.")
         }
-        Commands::LoadVoterReg {
+        Commands::LoadVR {
             table_name,
             file_path,
         } => {
@@ -134,6 +143,17 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             );
             load_voterreg(&conn, &table_name, &file_path).expect("Failed to load data from csv");
         }
+        Commands::LoadPP {
+            table_name,
+            file_path,
+        } => {
+            println!(
+                "Loading data into table '{}' from '{}'",
+                table_name, file_path
+            );
+            load_pollingplace(&conn, &table_name, &file_path)
+                .expect("Failed to load data from csv");
+        }
         Commands::CreateVR { table_name } => {
             println!("Creating Table {}", table_name);
             create_tablevr(&conn, &table_name).expect("Failed to create table");
@@ -142,13 +162,17 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             println!("Creating Table {}", table_name);
             create_pollingplace(&conn, &table_name).expect("Failed to create table");
         }
-        Commands::QueryVR { query } => {
+        Commands::ReadVR { query } => {
             println!("Executing query: {}", query);
             query_vr(&conn, &query).expect("Failed to execute query");
         }
-        Commands::QueryPP { query } => {
+        Commands::ReadPP { query } => {
             println!("Executing query: {}", query);
             query_pp(&conn, &query).expect("Failed to execute query");
+        }
+        Commands::Query { query } => {
+            println!("Executing query: {}", query);
+            general_query(&conn, &query).expect("Failed to execute query");
         }
         Commands::Update {
             table_name,

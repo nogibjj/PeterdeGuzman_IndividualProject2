@@ -1595,3 +1595,54 @@
 // }
 
 //
+
+// pub fn general_query(conn: &Connection, query: &str) -> Result<Vec<Vec<String>>, Box<dyn Error>> {
+//     let mut stmt = conn.prepare(query)?;
+
+//     // Get the column count before the query_map
+//     let column_count = stmt.column_count();
+
+//     let rows = stmt.query_map(params![], |row: &Row| {
+//         let mut row_vec = Vec::new();
+//         // Collect the column values as strings
+//         for i in 0..column_count {
+//             row_vec.push(row.get::<_, String>(i)?);
+//         }
+//         Ok(row_vec)
+//     })?;
+
+//     // Collect the results into a vector of vectors
+//     let mut result = Vec::new();
+//     for row in rows {
+//         result.push(row?);
+//     }
+
+//     Ok(result)
+// }
+
+// pub fn general_query(conn: &Connection, query: &str) -> Result<Vec<Vec<String>>, Box<dyn Error>> {
+//     let mut stmt = conn.prepare(query)?;
+
+//     // Get the number of columns from the statement
+//     let column_count = stmt.column_count();
+
+//     let rows = stmt.query_map(params![], |row: &Row| {
+//         let mut row_vec = Vec::new();
+
+//         // Collect the column values as strings
+//         for i in 0..column_count {
+//             let value: String = row.get(i)?; // This will attempt to get the value as a String
+//             row_vec.push(value);
+//         }
+//         Ok(row_vec)
+//     })?;
+
+//     // Collect the results into a vector of vectors
+//     let result = Vec::new();
+//     for row in rows {
+//         let row = row?;
+//         println!("{:?}", row);
+//     }
+
+//     Ok(result)
+// }
