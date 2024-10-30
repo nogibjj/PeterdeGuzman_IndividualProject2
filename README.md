@@ -1,7 +1,7 @@
 # This is a repository for Mini Project 8 and Individual Project 2
 
 ## Status Badge
-[![CI](https://github.com/nogibjj/PeterdeGuzman_IndividualProject2/actions/workflows/CI.yml/badge.svg)](https://github.com/nogibjj/PeterdeGuzman_IndividualProject2/actions/workflows/CI.yml)
+[![Rust CI/CD with tests](https://github.com/nogibjj/PeterdeGuzman_IndividualProject2/actions/workflows/CI.yml/badge.svg)](https://github.com/nogibjj/PeterdeGuzman_IndividualProject2/actions/workflows/CI.yml)
 [![Python Test with Github Actions](https://github.com/nogibjj/PeterdeGuzman_IndividualProject2/actions/workflows/pythonCI.yml/badge.svg)](https://github.com/nogibjj/PeterdeGuzman_IndividualProject2/actions/workflows/pythonCI.yml)
 
 If you review the Summary of past jobs in the GitHub "Actions" panel, you can view that this repository is able to successfully format, lint, build, and test the included Rust logic. 
