@@ -47,7 +47,8 @@ This tool allows users to download data from links to zipped files into their ch
 ### Data 
 This project uses data on polling places for elections in North Carolina. More information and a link to the data is available at:
 
--   https://www.ncsbe.gov/results-data/voter-registration-data
+- https://www.ncsbe.gov/results-data/polling-place-data
+- https://www.ncsbe.gov/results-data/voter-registration-data
 
 ### Future Improvements
 This repository is a work in progress. In the future, I will finish building out the functionality to intake NC voter registration and vote history data through an ETL pipeline into an external SQL database. At present, this project uses a SQLite database and I am navigating encoding issues with the voter registration data. 
