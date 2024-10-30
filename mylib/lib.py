@@ -1,5 +1,7 @@
 import csv
 import sqlite3
+import time
+from memory_profiler import memory_usage
 
 
 def load_pollingplaces(dataset, year):
@@ -55,26 +57,64 @@ LOG_FILE = "query_log.md"
 
 
 def log_query(query, result="none"):
-    """adds to a query markdown file"""
+    """Logs the executed SQL query and its result to a markdown file."""
     with open(LOG_FILE, "a") as file:
         file.write(f"```sql\n{query}\n```\n\n")
-        file.write(f"```response from databricks\n{result}\n```\n\n")
+        file.write(f"```response from sqlite\n{result}\n```\n\n")
 
 
-def general_query(query):
-    """runs a query a user inputs"""
+# CRUD Operations
 
-    load_dotenv()
-    server_h = os.getenv("sql_server_host")
-    access_token = os.getenv("databricks_api_key")
-    http_path = os.getenv("sql_http")
-    with sql.connect(
-        server_hostname=server_h,
-        http_path=http_path,
-        access_token=access_token,
-    ) as conn:
-        c = conn.cursor()
-        c.execute(query)
-        result = c.fetchall()
-    c.close()
-    log_query(f"{query}", result)
+
+def general_query(query, params=None):
+    conn = sqlite3.connect("pollingplaces_2020.db")
+    cursor = conn.cursor()
+    # execute read
+    start_time = time.time()
+    mem_usage_before = memory_usage(max_usage=True)
+    try:
+        if query.strip().upper().startswith("SELECT"):
+            cursor.execute(query, params or [])
+            results = cursor.fetchall()
+            execution_time = time.time() - start_time
+            mem_usage_after = memory_usage(max_usage=True)
+            log_query(
+                query,
+                {
+                    "results": results,
+                    "execution_time": execution_time,
+                    "memory_usage_before": mem_usage_before,
+                    "memory_usage": mem_usage_after,
+                },
+            )
+            return results
+        else:
+            cursor.execute(query, params or [])
+            conn.commit()
+            execution_time = time.time() - start_time
+            mem_usage_after = memory_usage(max_usage=True)
+            log_query(
+                query,
+                {
+                    "message": "Query executed successfully",
+                    "execution_time": execution_time,
+                    "memory_usage_before": mem_usage_before,
+                    "memory_usage": mem_usage_after,
+                },
+            )
+            return "Query executed successfully"
+    except sqlite3.Error as e:
+        execution_time = time.time() - start_time
+        mem_usage_after = memory_usage(max_usage=True)
+        log_query(
+            query,
+            {
+                "error": str(e),
+                "execution_time": execution_time,
+                "memory_usage_before": mem_usage_before,
+                "memory_usage": mem_usage_after,
+            },
+        )
+        return f"An error occurred: {e}"
+    finally:
+        conn.close()

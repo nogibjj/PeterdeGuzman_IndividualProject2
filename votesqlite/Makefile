@@ -3,20 +3,22 @@
 
 all: check build format lint test
 
-check:
+rust_check:
 	cargo check
 
-build:
+rust_build:
 	cargo build
 
-format:
+rust_format:
 	cargo fmt
 
-lint:
+rust_lint:
 	cargo clippy
 
-test:
+rust_test:
 	cargo test
 
-release:
+rust_release:
 	cargo build --release
+
+

@@ -13,8 +13,5 @@ if __name__ == "__main__":
         "SELECT COUNT(DISTINCT county_name) AS distinct_count FROM pollingplaces_2020"
     )
     test_query_log_exists()
-    file_name = "query_log.md"
-    search_string = (
-        "SELECT COUNT(DISTINCT county_name) AS distinct_count FROM pollingplaces_2020"
-    )
-    test_queryresult(file_name, search_string)
+
+    test_queryresult()
