@@ -1,16 +1,18 @@
 # This is a repository for Mini Project 8 and Individual Project 2
 
 ## Status Badge
-
+[![CI](https://github.com/nogibjj/PeterdeGuzman_IndividualProject2/actions/workflows/CI.yml/badge.svg)](https://github.com/nogibjj/PeterdeGuzman_IndividualProject2/actions/workflows/CI.yml)
 
 If you review the Summary of past jobs in the GitHub "Actions" panel, you can view that this repository is able to successfully format, lint, build, and test the included Rust logic. 
 
 ## Binary Download (Artifact Link)
-
+https://github.com/nogibjj/PeterdeGuzman_IndividualProject2/actions/runs/11587440169/artifacts/2121389088
 -   This tool can be used by downloading the binary file from the above link. Alternatively, users can fork this repo and use `cargo build --release` and `cargo run` to run this CLI tool locally. 
 
 ## Mini Project 8 - Explanation
 This project satisfies the requirements for Mini Project 8. I rewrote my existing Python script for loading and manipulating polling place data, and executing queries in a SQLite database. I used modules and crates in Python and Rust to measure the speed and memory usage of the SQL queries. 
+
+As you can see in the below screenshots, the Rust query is faster than the Python query for the same dataset and SQL syntax.
 
 Python Query:
 ![alt text](query_Python.png)
