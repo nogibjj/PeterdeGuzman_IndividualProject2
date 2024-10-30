@@ -13,7 +13,7 @@ If you review the Summary of past jobs in the GitHub "Actions" panel, you can vi
 This project satisfies the requirements for Mini Project 8. I rewrote my existing Python script for loading and manipulating polling place data, and executing queries in a SQLite database. I used modules and crates in Python and Rust to measure the speed and memory usage of the SQL queries. 
 
 Python Query:
-
+![alt text](query_Python.png)
 Rust Query:
 ![alt text](query_Rust.png)
 
@@ -34,7 +34,7 @@ This tool allows users to download data from links to zipped files into their ch
 
 
 ### CLI Tool Documentation
-![alt text]
+![alt text](helpstatement.png)
 
 ### Proof of Successful Command-Line Operations (Video)
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/w1ZQ8IafFdE/0.jpg)](https://www.youtube.com/watch?v=w1ZQ8IafFdE/)
