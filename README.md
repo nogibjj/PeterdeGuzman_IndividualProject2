@@ -10,7 +10,7 @@ https://github.com/nogibjj/PeterdeGuzman_IndividualProject2/actions/runs/1158744
 -   This tool can be used by downloading the binary file from the above link. Alternatively, users can fork this repo and use `cargo build --release` and `cargo run` to run this CLI tool locally. 
 
 ## Mini Project 8 - Explanation
-This project satisfies the requirements for Mini Project 8. I rewrote my existing Python script for loading and manipulating polling place data, and executing queries in a SQLite database. I used modules and crates in Python and Rust to measure the speed and memory usage of the SQL queries. 
+This project satisfies the requirements for Mini Project 8. I rewrote my existing Python script for loading and manipulating polling place data, and executing queries in a SQLite database. I used modules and crates in Python and Rust to measure the speed and memory usage of the SQL queries. I also included a CI/CD pipeline and tests for both Rust and Python functions. 
 
 As you can see in the below screenshots, the Rust query is faster than the Python query for the same dataset and SQL syntax.
 
@@ -19,8 +19,9 @@ Python Query:
 Rust Query:
 ![alt text](query_Rust.png)
 
+
 ## Individual Project 2 - Explanation
-This project also satisfies the requirements for Individual Project 2. 
+This project also satisfies the requirements for Individual Project 2. Rust source code is located the "votesqlite" subdirectory. Please review the video demo at the bottom of this README for a walkthrough of how the Rust CLI binary tool allows a user to query a database of polling place data with SQL syntax. 
 
 ### Use of LLM
 As a new user of Rust, when I started this project I used ChatGPT-4 to review my existing Python functions and suggest crates and functions to translate the functions into Rust's syntax. I have found that the LLM will often hallucinate and suggest crates or functions that do not exist, or it will suggest needlessly complex approaches to parsing files. 
