@@ -41,7 +41,7 @@ This tool allows users to download data from links to zipped files into their ch
 ![alt text](helpstatement.png)
 
 ### Proof of Successful Command-Line Operations (Video)
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/w1ZQ8IafFdE/0.jpg)](https://www.youtube.com/watch?v=w1ZQ8IafFdE/)
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/C_lkIdVbgJQ/0.jpg)](https://www.youtube.com/watch?v=C_lkIdVbgJQ/)
 
 
 ### Data 
